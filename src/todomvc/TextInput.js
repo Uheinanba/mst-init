@@ -5,15 +5,15 @@ class App extends React.Component {
     text: ""
   };
   handleChange = e => {
-    this.this.setState({
+    this.setState({
       text: e.target.value
     });
   };
   handleSubmit = e => {
     const text = e.target.value.trim();
     if (e.which === 13) {
-      this.props.onSave(text);
       this.setState({ text: "" });
+      this.props.onSave(text);
     }
   };
   render() {
