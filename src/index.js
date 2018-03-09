@@ -1,47 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Devtools from "mobx-react-devtools";
-import { onSnapshot, getSnapshot, addMiddleware } from 'mobx-state-tree';
+import { onPatch } from 'mobx-state-tree'
+import App from './invoice/components/App';
+import Invoice from './invoice/models/invoice'
+import makeInspectable from 'mobx-devtools-mst';
 
-import "./assets/index.css"
-import App from './wishlist/components/App'
-import { Group } from './wishlist/models/Group'
+const invoice = Invoice.create({currency: 'CAD'});
 
-let initState = {
-  "users": {}
-};
+onPatch(invoice, patch => console.log(patch))
+makeInspectable(invoice);
 
-let group = window.group = Group.create(initState)
-
-addMiddleware(group, (call, next) => {
-  console.log(`[${call.type}] ${call.name}`)
-  next();
-})
-
-function renderApp() {
-  ReactDOM.render(
-    <div>
-      <Devtools />
-      <App group={group}/>
-    </div>,
-    document.getElementById("root")
-  );
-}
-
-renderApp();
-
-if(module.hot) {
-  module.hot.accept(["./wishlist/components/App"], () => {
-      // new components
-      renderApp()
-  })
-
-  module.hot.accept(["./wishlist/models/Group"], () => {
-      // new model definitions
-      const snapshot = getSnapshot(Group)
-      group = window.group = Group.create(snapshot)
-      renderApp()
-  })
-}
-
-
+ReactDOM.render(
+  <div>
+    <App invoice={invoice}/>
+    {/* <Devtools /> */}
+  </div>,
+  document.getElementById("root")
+);
