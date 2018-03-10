@@ -2,19 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Devtools from "mobx-react-devtools";
 import { onPatch } from "mobx-state-tree";
-import App from "./demo/components/App";
-import IndexStore from "./demo/models/view";
+import App from "./invoice/components/App";
+import Invoice from "./invoice/models/invoice";
 import makeInspectable from "mobx-devtools-mst";
 
-// console.log(user.id);
-const indexStore = IndexStore.create();
+const invoice = Invoice.create({ currency: "CAD" });
 
-// onPatch(book, patch => console.log(patch))
-makeInspectable(indexStore);
+onPatch(invoice, patch => console.log(patch));
+makeInspectable(invoice);
 
 ReactDOM.render(
   <div>
-    <App store={indexStore} />
+    <App invoice={invoice} />
     {/* <Devtools /> */}
   </div>,
   document.getElementById("root")
